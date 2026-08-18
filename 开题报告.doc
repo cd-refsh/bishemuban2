@@ -1,0 +1,325 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="UTF-8">
+<title>硕士学位论文开题报告</title>
+<style>
+body { font-family: 宋体; font-size: 12pt; line-height: 1.6; }
+h1 { font-family: 黑体; font-size: 18pt; text-align: center; }
+h2 { font-family: 黑体; font-size: 15pt; }
+h3 { font-family: 黑体; font-size: 14pt; }
+h4 { font-family: 黑体; font-size: 12pt; }
+p { text-indent: 2em; margin: 0; }
+.noindent { text-indent: 0; }
+.en { font-family: "Times New Roman"; }
+.fig { text-align: center; margin: 12px 0; }
+.fig table { border-collapse: collapse; margin: 0 auto; }
+.fig td { border: 1px solid #333; padding: 8px 14px; font-size: 10.5pt; }
+.cap { font-size: 10.5pt; text-align: center; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<h1>硕士学位论文开题报告</h1>
+<p class="noindent" style="text-align:center;">论文题目：基于肘关节结构优化的7自由度冗余机械臂运动学建模、负载辨识与轨迹规划研究</p>
+
+<h2>1 课题来源及研究目的和意义</h2>
+
+<h3>1.1 课题的来源</h3>
+<p>本课题来源于导师承担的科研课题，并在本科阶段"基于直线驱动的人形臂关节机构优化及分析"研究基础上进行延伸与深化。7自由度冗余机械臂因其冗余运动学特性，在避障、奇异规避及灵巧操作方面具有突出优势，已广泛应用于智能制造、医疗辅助、空间探索及服务机器人等领域<sup>[1]</sup>。冗余机械臂在执行末端位姿任务的同时，可借助自运动实现避障、奇异规避及关节力矩优化等次级目标<sup>[2]</sup>，其运动学性能与结构参数密切相关。本课题在前期肘关节直线驱动结构创新的基础上，进一步开展7自由度整臂的运动学建模、肘关节位置参数优化、负载参数辨识及轨迹规划研究，旨在通过结构优化与运动学方法、参数辨识的协同设计，提升机械臂的综合运动性能与自适应能力。</p>
+
+<h3>1.2 课题研究目的和意义</h3>
+<p>7自由度冗余机械臂较传统的6自由度机械臂多出一个冗余自由度，能够利用零空间自运动实现避障、奇异构型规避及关节力矩优化等目标<sup>[3]</sup>。然而冗余自由度的存在也使逆运动学求解变得复杂——给定末端位姿存在无穷多组关节角解，如何从中选取最优解并保证运动连续性是运动控制面临的关键问题<sup>[4]</sup>。此外，机械臂连杆参数特别是肘关节位置参数对工作空间范围、灵巧度及奇异点分布具有直接影响，通过结构层面的参数优化可从根本上改善机械臂的运动学性能<sup>[5]</sup>。另一方面，机械臂在实际作业中经常需要抓取未知质量与惯量的负载，负载参数的变化会引起系统动力学特性的显著改变，若不能在线辨识并补偿，将直接影响轨迹跟踪精度与控制稳定性<sup>[6]</sup>。因此，开展负载参数的智能辨识研究对提升机械臂在变负载条件下的自适应能力具有重要意义。</p>
+<p>本课题的研究目的在于：在前期肘关节直线驱动结构创新基础上，建立含可优化肘关节位置参数的7自由度机械臂运动学模型，采用遗传算法对肘关节位置进行多目标优化，以最大化工作空间和最小化条件数为目标获得最优结构参数；研究7自由度冗余机械臂的解析逆运动学求解方法，基于臂角参数化处理冗余自由度，并结合关节限位与运动连续性约束提出合理的解选择策略；研究机械臂抓取未知负载时质量与惯量参数的在线辨识方法；在优化结构的基础上开展笛卡尔空间与关节空间相结合的轨迹规划，考虑关节限位、速度及加速度约束，生成光滑且可执行的关节轨迹；探索基于模型预测控制（MPC）的轨迹跟踪方法，融合负载辨识结果与扰动观测器，实现变负载与扰动条件下机械臂对期望轨迹的高精度鲁棒跟踪。</p>
+<p>本课题的研究意义体现在理论与应用两个方面。理论上，将结构优化、运动学分析、负载辨识与轨迹规划有机结合，形成"结构—运动学—辨识—规划—控制"一体化设计方法，为冗余机械臂的参数化设计、变负载自适应控制与运动规划提供理论支撑；应用上，优化后的肘关节结构可提升机械臂的可达性与灵巧性，所提出的负载辨识与轨迹规划跟踪方法可应用于工业装配、物料搬运、医疗辅助等涉及未知负载操作的场合，具有较好的工程应用前景。</p>
+
+<h2>2 国内外研究现状及分析</h2>
+
+<h3>2.1 国外研究现状</h3>
+<p><b>（1）冗余机械臂运动学建模与逆解。</b>Hollerbach和Suh<sup>[3]</sup>最早系统研究了冗余机械臂的扭矩优化分解方法，奠定了冗余自由度利用的理论基础。Liégeois<sup>[7]</sup>提出梯度投影法，利用雅可比零空间向量实现冗余自由度的次级目标优化，至今仍是冗余机械臂控制中的经典方法。Siciliano<sup>[8]</sup>对冗余机械臂的运动学控制进行了全面综述。Nakamura<sup>[9]</sup>在其专著中系统阐述了冗余机器人的运动学与控制理论。对于球腕结构的7自由度机械臂，Shimizu等<sup>[10]</sup>提出基于臂角参数化的解析逆解方法，通过定义参考平面和臂角将无穷多解参数化为单一变量的函数，该方法被后续研究者广泛采用。Kreutz-Delgado等<sup>[11]</sup>进一步研究了7自由度机械臂的封闭解结构，指出固定冗余参数后系统退化为6自由度问题，存在最多8组解析解。Maciejewski和Klein<sup>[12]</sup>研究了利用冗余自由度实现避障的方法，提出了基于零空间梯度的障碍物规避策略。Asada和Slotine<sup>[13]</sup>在其经典著作中系统介绍了机器人分析与控制的理论基础。Spong等<sup>[14]</sup>在机器人建模与控制教材中对串联机械臂的运动学与动力学进行了全面论述。Siciliano和Khatib<sup>[15]</sup>主编的机器人学手册成为该领域的权威参考。</p>
+
+<div class="fig">
+<table>
+<tr><td>肩部<br>θ1 θ2 θ3</td><td>→</td><td>肘部<br>θ4 (冗余)</td><td>→</td><td>腕部<br>θ5 θ6 θ7</td></tr>
+</table>
+<p class="cap">图1 7自由度冗余机械臂S-R-S构型示意图</p>
+</div>
+
+<p><b>（2）结构参数优化与灵巧度分析。</b>Khalil和Dombre<sup>[16]</sup>在其专著中系统阐述了机器人运动学建模与辨识方法，强调了几何参数对工作空间和灵巧度的影响。Salisbury和Craig<sup>[17]</sup>最早提出用雅可比矩阵的条件数作为衡量机械臂灵巧度的指标。Gosselin<sup>[18]</sup>进一步研究了基于灵巧度的机器人机构综合方法。Bowling和Khatib<sup>[19]</sup>提出了综合考虑运动学与动力学性能的灵巧度指标。Singh等<sup>[20]</sup>采用遗传算法对6自由度工业机器人的DH参数进行了优化，以最大化工作空间体积为目标，验证了进化算法在机器人结构优化中的有效性。Carbone等<sup>[21]</sup>通过多目标优化方法对串联机械臂的连杆尺寸进行设计，综合考虑了工作空间、灵巧度及刚度指标。Kufieta<sup>[22]</sup>研究了力矩传感器辅助下的负载估计方法。</p>
+
+<p><b>（3）负载参数辨识与自适应控制。</b>机械臂抓取未知负载时的参数辨识是提升自适应能力的关键。Atkeson等<sup>[23]</sup>系统研究了基于运动响应的机器人负载参数辨识方法，利用最小二乘法估计负载的质量和惯量参数。An等<sup>[24]</sup>提出了基于力/位置测量的参数估计方法，分析了可辨识性与激励轨迹的关系。Khosla和Kanade<sup>[25]</sup>研究了实时参数估计算法，实现了机器人动力学参数的在线辨识。Slotine和李卫平<sup>[26]</sup>提出了自适应控制方法，在机器人参数不确定条件下实现了稳定跟踪。de Wit等<sup>[27]</sup>在自适应机器人控制方面做出了重要贡献。Mayeda等<sup>[28]</sup>研究了基于参数辨识的动力学建模方法。Olsen和Petersen<sup>[29]</sup>提出了递归最小二乘法在线估计负载参数的方法。Cheng和Gupta<sup>[30]</sup>于2018年提出了一种基于多传感器融合的负载辨识方法。Wang等<sup>[31]</sup>于2023年研究了机械臂惯量参数的在线估计方法，利用卡尔曼滤波实现了递推估计。Chen等<sup>[32]</sup>于2024年发表了关于机械臂负载质量快速估计的最新成果，利用神经网络实现了短时辨识。Catelani等<sup>[33]</sup>研究了测量不确定度对参数辨识的影响。Bona和Indri<sup>[34]</sup>对参数辨识的精度评估方法进行了系统分析。Haddadin等<sup>[35]</sup>研究了机械臂的安全碰撞与负载感知问题，为协作机器人的安全操作提供了理论支撑。</p>
+
+<div class="fig">
+<table>
+<tr><td>力/力矩<br>传感器</td><td>→</td><td>运动响应<br>q, q̇</td><td>→</td><td>回归矩阵<br>Y(q,q̇,q̈)</td><td>→</td><td>RLS/卡尔曼<br>估计器</td><td>→</td><td>负载参数<br>m, r, I</td></tr>
+</table>
+<p class="cap">图2 负载参数在线辨识流程示意图</p>
+</div>
+
+<p><b>（4）轨迹规划。</b>Latombe<sup>[36]</sup>在其经典著作中系统介绍了构型空间方法与路径搜索算法。快速扩展随机树（RRT）由LaValle<sup>[37]</sup>提出，成为高维空间路径规划的主流方法。Karaman和Frazzoli<sup>[38]</sup>提出了渐近最优的RRT*算法。在时间最优轨迹规划方面，Verscheure等<sup>[39]</sup>将轨迹规划建模为非线性规划问题，通过序列二次规划求解时间最优参数化轨迹。基于优化的轨迹规划方法如CHOMP<sup>[40]</sup>和TrajOpt<sup>[41]</sup>在考虑约束的轨迹生成中表现出色。Krut等<sup>[42]</sup>研究了冗余机械臂的最优力矩分配与轨迹规划。Ott等<sup>[43]</sup>研究了冗余机器人的柔顺控制与轨迹规划。Chiacchio等<sup>[44]</sup>提出了冗余机械臂的工作空间分析与评价方法。</p>
+
+<p><b>（5）模型预测控制。</b>Falcone等<sup>[45]</sup>较早将MPC应用于车辆主动转向系统，展示了MPC处理多约束的优势。对于机械臂的MPC控制，Lam等<sup>[46]</sup>提出了基于线性化动力学模型的MPC方法，通过在工作点线性化将非线性预测问题转化为二次规划，实现了实时求解。Diehl等<sup>[47]</sup>研究了非线性MPC的实时求解算法，提出了多种牛顿型迭代方法。Grancharova和Johansen<sup>[48]</sup>研究了显式MPC方法，通过离线计算将在线优化转化为查表操作。Rogoza等<sup>[49]</sup>对MPC在机器人操作中的应用进行了综述，指出运动学MPC因计算效率高而更适合实时控制。Köhl和Plagemann<sup>[50]</sup>研究了MPC在受限环境下的机器人操作应用。Towi等<sup>[51]</sup>于2024年提出了一种基于管式MPC的机械臂轨迹跟踪方法，在处理模型不确定性方面取得了显著进展。Elsayed等<sup>[52]</sup>于2025年发表了关于冗余机械臂实时MPC的最新成果，利用GPU加速实现了7自由度机械臂的实时非线性MPC。Ferrara等<sup>[53]</sup>研究了滑模与MPC结合的机械臂控制方法。Bemporad等<sup>[54]</sup>提出了显式MPC的系统化设计框架。</p>
+
+<h3>2.2 国内研究现状</h3>
+<p><b>（1）运动学建模与逆解。</b>清华大学王宏等<sup>[55]</sup>针对关节限位优化的7自由度机械臂逆运动学问题，提出了基于臂角参数化的解析解方法，将关节限位约束转化为臂角的可行区间约束。北京航空航天大学贠超等<sup>[56]</sup>研究了7自由度冗余机械臂的自运动规划，利用加权最小范数法实现避障与奇异规避。哈尔滨工业大学刘宏等<sup>[57]</sup>针对空间机械臂的运动学建模与逆解开展了系统研究，提出了一种基于几何约束的封闭逆解算法。熊有伦等<sup>[58]</sup>在其著作中系统阐述了机器人学的理论基础。蔡自兴等<sup>[59]</sup>对机器人学的基础理论进行了全面介绍。黄真等<sup>[60]</sup>研究了机构灵巧度分析方法。张铁<sup>[61]</sup>在工业机器人设计与控制方面开展了系统研究。李泽湘等<sup>[62]</sup>研究了机器人控制的理论与方法。王越超等<sup>[63]</sup>研究了冗余机械臂的运动学协调控制。刘云辉等<sup>[64]</sup>研究了机械臂的运动规划与协调。陈恳等<sup>[65]</sup>对机器人精度分析进行了深入研究。赵伟等<sup>[66]</sup>研究了机械臂工作空间的数值分析方法。</p>
+
+<p><b>（2）结构优化。</b>上海交通大学杨建超等<sup>[67]</sup>采用多目标遗传算法对机械臂的连杆参数进行了优化设计，以工作空间体积和条件数为优化目标，获得了Pareto最优解集。华中科技大学丁汉等<sup>[68]</sup>从灵巧度角度分析了机械臂的尺寸参数优化问题，指出连杆长度比对条件数有显著影响。南京航空航天大学赵东标等<sup>[69]</sup>研究了基于NSGA-II算法的机械臂多目标优化，综合考虑了运动学性能与结构紧凑性。王宏等<sup>[70]</sup>于2022年发表了关于冗余机械臂结构优化的最新研究。李晓等<sup>[71]</sup>研究了遗传算法在机器人参数优化中的应用。刘今等<sup>[72]</sup>对机械臂动力学建模进行了系统研究。周剑等<sup>[73]</sup>研究了机械臂轨迹优化的方法。孙增圻等<sup>[74]</sup>在智能控制理论与应用方面做了大量工作。</p>
+
+<div class="fig">
+<table>
+<tr><td>初始种群<br>（肘关节参数）</td><td>→</td><td>适应度评价<br>工作空间/条件数</td><td>→</td><td>选择/交叉/变异</td></tr>
+</table>
+<tr><td colspan="5" style="border:none; text-align:center;">↓ 迭代进化</td></tr>
+<table>
+<tr><td>Pareto最优解集</td><td>→</td><td>最优结构参数</td></tr>
+</table>
+<p class="cap">图3 肘关节位置参数遗传算法优化流程</p>
+</div>
+
+<p><b>（3）负载辨识与自适应控制。</b>付宜利等<sup>[75]</sup>研究了机械臂负载辨识的力觉方法，利用六维力传感器实现了负载质量与质心位置的估计。张华军等<sup>[76]</sup>于2023年提出了一种基于递归最小二乘的负载质量在线估计方法。李会军等<sup>[77]</sup>于2024年发表了关于机械臂惯量参数辨识的最新成果，利用多段激励轨迹提高了辨识精度。朱延正等<sup>[78]</sup>于2023年研究了变负载条件下的自适应轨迹跟踪控制。张立勋等<sup>[79]</sup>研究了机械臂的力觉控制与参数估计。王树新等<sup>[80]</sup>研究了机械臂的柔顺控制方法。徐德等<sup>[81]</sup>研究了视觉伺服与力觉融合的控制方法。谭民等<sup>[82]</sup>在机器人控制与规划方面开展了系统研究。</p>
+
+<p><b>（4）轨迹规划与MPC控制。</b>王伟等<sup>[83]</sup>提出了一种融合RRT与样条插值的机械臂轨迹规划方法，兼顾了路径搜索的全局性与轨迹的光滑性。孙立宁等<sup>[84]</sup>研究了冗余机械臂的避障轨迹规划，利用零空间向量实现自运动避障。褚健等<sup>[85]</sup>较早将MPC引入工业机器人控制，实现了考虑关节速度约束的轨迹跟踪。陈卫东等<sup>[86]</sup>研究了基于MPC的机械臂力/位混合控制。黄强等<sup>[87]</sup>于2024年发表了关于仿人机械臂运动学MPC的最新研究。郑志强等<sup>[88]</sup>于2025年提出了基于深度学习的MPC求解方法。</p>
+
+<p><b>（5）扰动观测与鲁棒控制。</b>韩京清<sup>[89]</sup>提出的自抗扰控制（ADRC）技术为机械臂的扰动抑制提供了有效工具。韩崇昭等<sup>[90]</sup>研究了扩张状态观测器（ESO）在非线性系统中的应用。陈宏等<sup>[91]</sup>将ESO与滑模控制结合应用于机械臂控制。宋爱国等<sup>[92]</sup>于2024年提出了基于ESO-MPC的机械臂控制方法，将扰动估计与预测控制相结合，有效提升了轨迹跟踪精度。</p>
+
+<h3>2.3 国内外文献综述的简析</h3>
+<p>综合国内外研究现状，已取得的成果可归纳如下：7自由度冗余机械臂的解析逆解方法已较为成熟，基于臂角参数化的方法能够将无穷多解转化为有限解<sup>[10,55]</sup>；结构参数优化方面，多目标进化算法已被广泛应用于连杆参数设计<sup>[20,67]</sup>；负载参数辨识方面，基于力/力矩测量与运动响应的最小二乘辨识方法已较为成熟，近年来神经网络与卡尔曼滤波等智能方法的应用提升了辨识精度与速度<sup>[31,76]</sup>；轨迹规划方面，从路径搜索到时间参数化的完整流程已基本建立<sup>[38,83]</sup>；MPC在机械臂控制中的应用研究不断深入，计算效率逐步提升<sup>[46,52]</sup>。</p>
+<p>然而现有研究仍存在以下不足：第一，结构优化与运动学分析、轨迹规划的研究通常割裂进行，缺乏"结构—运动学—辨识—规划"一体化的设计方法，多数研究在固定结构参数后开展运动学分析，而未将结构参数作为可优化变量纳入运动学性能评估。第二，肘关节位置参数对7自由度机械臂运动学性能的影响研究不够充分，特别是在直线驱动肘关节结构创新背景下，肘关节位置优化与工作空间、奇异点分布的定量关系尚需深入。第三，负载参数辨识多在固定构型或特定运动条件下进行，与轨迹规划、运动控制的协同不足，变负载条件下的自适应轨迹跟踪研究有待完善。第四，轨迹规划中8组解的连续性选择策略多基于最小关节运动准则，对速度约束与加速度约束的综合考虑不足，在高速运动场景下可能导致关节力矩超限。第五，MPC在7自由度机械臂上的实时应用仍面临计算量大的挑战，特别是在考虑动力学约束与变负载时计算复杂度进一步增加；扰动观测与MPC的结合、负载辨识与MPC的协同在机械臂控制中的应用研究尚处于起步阶段。本课题将针对上述不足，重点研究肘关节结构优化与运动学建模、负载辨识、轨迹规划的协同设计方法，并探索ESO与运动学MPC结合的变负载轨迹跟踪方案。</p>
+
+<h2>3 主要内容及方案</h2>
+
+<h3>3.1 研究内容概述</h3>
+<p>本课题以7自由度冗余机械臂为研究对象，围绕肘关节结构优化、运动学建模与逆解、负载参数辨识、轨迹规划及MPC轨迹跟踪五个方面开展研究。总体思路是：首先在前期肘关节直线驱动结构创新基础上，将肘关节位置参数作为可优化变量，建立参数化的运动学模型；其次采用遗传算法对肘关节位置进行多目标优化，以最大化工作空间和最小化条件数为目标获取最优结构参数；然后在优化结构的基础上研究7自由度逆运动学解析求解方法，提出考虑关节限位与运动连续性的解选择策略；接着研究机械臂抓取未知负载时质量与惯量参数的在线辨识方法；随后开展笛卡尔空间路径规划与关节空间时间参数化相结合的轨迹规划，生成满足约束的光滑轨迹；最后探索基于运动学MPC的轨迹跟踪方法，融合负载辨识结果与扩张状态观测器（ESO）进行扰动补偿，提升系统在变负载与扰动条件下的鲁棒性。整体技术路线如图4所示。</p>
+
+<div class="fig">
+<table>
+<tr>
+<td>肘关节结构<br>创新与参数化</td><td>→</td><td>遗传算法<br>多目标优化</td><td>→</td><td>最优结构<br>参数确定</td>
+</tr>
+<tr><td colspan="5" style="border:none;text-align:center;">↓</td></tr>
+<tr>
+<td>正/逆运动学<br>建模与验证</td><td>→</td><td>负载参数<br>在线辨识</td><td>→</td><td>轨迹规划<br>(路径+时间)</td>
+</tr>
+<tr><td colspan="5" style="border:none;text-align:center;">↓</td></tr>
+<tr>
+<td colspan="3" style="text-align:center;">ESO-MPC轨迹跟踪（融合负载辨识）</td><td>→</td><td>仿真验证与<br>性能对比</td>
+</tr>
+</table>
+<p class="cap">图4 课题整体技术路线</p>
+</div>
+
+<h3>3.2 肘关节结构参数优化</h3>
+<p>（1）参数化运动学建模。根据7自由度机械臂的S-R-S（球腕-旋转-球腕）构型特点，采用改进DH参数法建立运动学模型<sup>[16,58]</sup>。将肘关节位置参数（上臂长度、前臂长度及肘关节偏移量）作为可优化变量引入DH参数表，使运动学模型中包含待优化的结构参数。通过正运动学推导得到末端位姿与关节角及结构参数的函数关系。</p>
+<p>（2）优化目标函数设计。综合考虑以下性能指标构建多目标优化函数：工作空间体积最大化，通过蒙特卡洛方法采样关节空间，统计末端可达点的体积<sup>[21,66]</sup>；平均条件数最小化，条件数反映雅可比矩阵的奇异性，条件数越小说明机械臂越远离奇异构型，灵巧度越高<sup>[17,68]</sup>；直线驱动行程最小化，在满足工作空间需求的前提下使肘关节直线驱动器的行程尽可能短，有利于结构紧凑。采用NSGA-II算法求解Pareto最优前沿<sup>[69]</sup>。</p>
+<p>（3）遗传算法优化。采用实数编码遗传算法，种群规模设为100-200，交叉概率0.8，变异概率0.05，进化代数200-500代<sup>[20,67]</sup>。约束条件包括连杆长度范围约束、关节限位约束、直线驱动行程约束等。优化结果将通过工作空间可视化、条件数分布图等方式进行验证与分析。</p>
+
+<h3>3.3 运动学建模与逆解</h3>
+<p>（1）正运动学。基于改进DH参数法，通过齐次变换矩阵连乘得到末端位姿，其中各关节变换矩阵包含优化后的肘关节位置参数<sup>[14,61]</sup>。</p>
+<p>（2）逆运动学解析求解。采用臂角参数化方法<sup>[10,55]</sup>：由末端位姿确定腕心和肩心的位置；由余弦定理确定肘关节角θ4，在机械限位约束下θ4唯一确定；定义参考平面（θ3=0时的肩-肘-腕平面），引入臂角ψ作为冗余参数描述肘心绕肩腕连线的旋转；给定ψ后，系统退化为6自由度问题，分别求解肩关节和腕关节角度，最多得到8组解<sup>[11]</sup>。求解流程如图5所示。</p>
+
+<div class="fig">
+<table>
+<tr>
+<td>末端位姿<br>T (位置+姿态)</td><td>→</td><td>确定肩心S<br>腕心W</td><td>→</td><td>余弦定理<br>求θ4</td>
+</tr>
+<tr><td colspan="5" style="border:none;text-align:center;">↓</td></tr>
+<tr>
+<td>给定臂角ψ</td><td>→</td><td>求肘心E<br>(绕SW旋转)</td><td>→</td><td>解肩关节<br>θ1θ2θ3</td><td>→</td><td>解腕关节<br>θ5θ6θ7</td>
+</tr>
+<tr><td colspan="7" style="border:none;text-align:center;">↓ 最多8组解</td></tr>
+<tr><td colspan="3" style="text-align:center;">限位检查 + 最小关节运动准则</td><td>→</td><td colspan="3">最优解</td></tr>
+</table>
+<p class="cap">图5 7自由度机械臂逆运动学求解流程</p>
+</div>
+
+<p>（3）解选择策略。对8组解进行筛选：关节限位检查，排除超出关节限位的解；最小关节运动准则，在可行解中选取与当前关节角距离平方和最小的解，保证运动连续性；速度约束检查，验证相邻时刻关节角变化率是否超限。若某末端位姿无可行解，则在轨迹规划阶段调整路径。</p>
+
+<h3>3.4 负载参数辨识</h3>
+<p>（1）负载动力学模型。机械臂末端抓取负载后，系统动力学方程中引入负载项，将负载参数（质量、质心位置、惯量张量）整理为线性参数化形式，其中回归矩阵由运动状态构成，待辨识参数向量为负载的惯性参数<sup>[23,28]</sup>。</p>
+<p>（2）激励轨迹设计。为提高参数辨识的精度与条件数，需要设计充分激励的轨迹。采用有限傅里叶级数构造激励轨迹，通过优化傅里叶系数使回归矩阵的条件数最小化<sup>[24,75]</sup>。</p>
+<p>（3）参数估计算法。采用递归最小二乘法（RLS）对负载参数进行在线估计<sup>[29,76]</sup>；进一步引入带遗忘因子的RLS以适应参数突变；结合卡尔曼滤波实现状态与参数的联合估计<sup>[31]</sup>。此外，探索基于径向基函数（RBF）神经网络的负载质量快速辨识方法，利用短时力/运动数据实现负载质量的快速分类<sup>[32,77]</sup>。</p>
+<p>（4）辨识精度验证。通过仿真对比不同激励轨迹与估计算法的辨识精度，分析传感器噪声对辨识结果的影响<sup>[33,34]</sup>，并在变负载条件下验证算法的收敛性与鲁棒性。</p>
+
+<h3>3.5 轨迹规划</h3>
+<p>（1）笛卡尔空间路径规划。根据任务需求生成末端期望路径，采用5次多项式或B样条曲线对起止点及中间路径点进行插值，保证位置、速度和加速度的连续性<sup>[83]</sup>。若存在障碍物，则采用RRT*算法在构型空间中搜索无碰撞路径<sup>[38]</sup>。</p>
+<p>（2）逆解可行性检查与路径调整。对路径上的每个离散位姿进行逆运动学求解与解选择，检查是否存在合法解及解的连续性。若某段路径不满足约束，则通过插入中间过渡点或微调末端位姿进行修正。</p>
+<p>（3）关节空间时间参数化。在获得连续的关节角路径后，采用S型速度曲线进行时间最优参数化<sup>[39]</sup>。给定各关节的速度上限和加速度上限，通过求解时间最优化问题确定各段的时间分配，生成光滑的关节轨迹。S型速度曲线如图6所示。</p>
+
+<div class="fig">
+<table>
+<tr>
+<td>加速段<br>(jerk>0→=0→<0)</td><td>→</td><td>匀速段<br>(v=vmax)</td><td>→</td><td>减速段<br>(jerk<0→=0→>0)</td>
+</tr>
+</table>
+<p class="cap">图6 S型速度曲线分段示意</p>
+</div>
+
+<p>（4）臂角ψ规划。利用冗余自由度，在轨迹规划过程中对臂角ψ进行优化，可选目标包括奇异规避（最大化最小奇异值）、避障或关节力矩均匀化<sup>[7,84]</sup>。将ψ作为额外的优化变量，与关节轨迹同步规划。</p>
+
+<h3>3.6 基于运动学MPC的轨迹跟踪</h3>
+<p>（1）运动学预测模型。建立离散运动学预测模型，状态变量为关节角，控制量为关节速度或末端速度，雅可比伪逆用于描述关节速度与末端速度的映射关系<sup>[8,49]</sup>。</p>
+<p>（2）成本函数设计。成本函数包含位置跟踪误差、速度跟踪误差及控制量平滑性等指标，通过权重矩阵调节各项的相对重要性。</p>
+<p>（3）约束处理。将关节限位、速度限位及加速度限位作为不等式约束加入MPC优化问题，在每个预测步中检查约束是否满足<sup>[46]</sup>。</p>
+<p>（4）负载辨识融合。将负载参数辨识结果实时更新到MPC预测模型中，修正因负载变化引起的模型偏差，提升变负载条件下的跟踪精度<sup>[26,78]</sup>。</p>
+<p>（5）ESO扰动补偿。引入扩张状态观测器估计系统中的集中扰动（包括模型不确定性、外部扰动及摩擦力等未建模项）<sup>[89,90]</sup>。将ESO估计的扰动前馈到MPC预测模型中，提升跟踪精度和鲁棒性<sup>[92]</sup>。控制器结构如图7所示。</p>
+
+<div class="fig">
+<table>
+<tr>
+<td>期望轨迹<br>q<sub>d</sub></td><td>→</td>
+<td rowspan="3">MPC<br>控制器</td><td>→</td>
+<td rowspan="3">机械臂<br>对象</td><td>→</td>
+<td>实际关节<br>q, q̇</td>
+</tr>
+<tr>
+<td>负载辨识<br>φ̂<sub>L</sub></td><td>→</td><td>→</td><td>扰动d</td>
+</tr>
+<tr>
+<td>ESO<br>扰动估计d̂</td><td>→</td><td colspan="2" style="border:none;">← 反馈</td>
+</tr>
+</table>
+<p class="cap">图7 ESO-MPC轨迹跟踪控制系统结构</p>
+</div>
+
+<p>（6）实时求解。在每个采样时刻，将非线性预测模型在当前工作点线性化，转化为二次规划（QP）问题，利用OSQP求解器进行高效求解，满足实时性要求<sup>[48,54]</sup>。</p>
+
+<h3>3.7 技术路线</h3>
+<p>本课题的技术路线为：肘关节结构创新与参数化建模 → 遗传算法多目标优化 → 最优结构参数确定 → 正/逆运动学建模与验证 → 负载参数在线辨识 → 轨迹规划（路径生成+逆解检查+时间参数化） → ESO-MPC轨迹跟踪（融合负载辨识） → 仿真验证与性能对比分析。各环节紧密衔接，结构优化结果直接用于后续运动学分析与轨迹规划，负载辨识结果实时反馈至MPC控制器，形成"结构优化—运动学—辨识—规划—控制"的完整研究链条。</p>
+
+<h2>4 预期达到的目标</h2>
+<p>（1）建立含可优化肘关节位置参数的7自由度机械臂运动学模型，通过遗传算法获得使工作空间增大、条件数降低的最优结构参数，并与优化前结构进行定量对比分析。</p>
+<p>（2）实现7自由度冗余机械臂基于臂角参数化的解析逆解算法，提出考虑关节限位与运动连续性的解选择策略，保证轨迹规划中关节运动的连续性与安全性。</p>
+<p>（3）实现机械臂抓取未知负载时质量与惯量参数的在线辨识，在变负载条件下辨识误差控制在5%以内，并验证辨识算法的收敛性与鲁棒性。</p>
+<p>（4）完成笛卡尔空间与关节空间相结合的轨迹规划，生成满足关节限位、速度及加速度约束的光滑可执行轨迹，并利用臂角ψ规划实现奇异规避。</p>
+<p>（5）实现基于ESO-MPC的轨迹跟踪控制器，融合负载辨识结果，在仿真环境下验证其对期望轨迹的跟踪精度及抗扰动能力，与无扰动补偿的MPC进行对比，证明所提方法的有效性。</p>
+<p>（6）形成完整的"结构优化—运动学—负载辨识—轨迹规划—跟踪控制"研究体系，撰写学术论文1-2篇。</p>
+
+<h2>5 已完成的学术研究</h2>
+<p>（1）在本科阶段完成了"基于直线驱动的人形臂关节机构优化及分析"研究，设计了肘关节直线驱动结构方案，建立了肘关节的局部运动学模型，并进行了初步的参数优化分析，为本课题的肘关节结构创新奠定了基础。</p>
+<p>（2）调研了大量7自由度冗余机械臂运动学建模、逆解、结构优化、负载辨识及MPC控制方面的国内外文献，完成了文献综述，明确了研究现状与存在的不足。</p>
+<p>（3）初步搭建了7自由度机械臂的DH参数模型，利用MATLAB Robotics Toolbox进行了正运动学验证与工作空间仿真，初步分析了肘关节位置参数对工作空间范围的影响。</p>
+<p>（4）完成了遗传算法优化框架的搭建，以工作空间体积为单目标进行了初步优化试验，验证了算法的可行性和收敛性。</p>
+<p>（5）初步研究了基于力传感器信息的负载质量估计方法，验证了递归最小二乘法在负载辨识中的可行性。</p>
+
+<h2>6 进度安排</h2>
+<p class="noindent">第1-2个月：完善文献调研，确定研究方案与技术路线，完成开题报告。</p>
+<p class="noindent">第3-4个月：建立7自由度机械臂参数化运动学模型，完成正运动学推导与验证。</p>
+<p class="noindent">第5-6个月：开展肘关节位置参数的多目标遗传算法优化，获得最优结构参数，进行工作空间与灵巧度对比分析。</p>
+<p class="noindent">第7-8个月：研究7自由度逆运动学解析求解方法，实现解选择策略。</p>
+<p class="noindent">第9-10个月：开展负载参数辨识算法研究，完成激励轨迹设计与参数估计算法仿真验证。</p>
+<p class="noindent">第11-12个月：完成轨迹规划算法设计与仿真，搭建ESO-MPC轨迹跟踪控制器，完成仿真验证与性能对比分析。</p>
+<p class="noindent">第13-14个月：整理研究成果，撰写学术论文，完成学位论文初稿。</p>
+<p class="noindent">第15-16个月：论文修改完善，准备答辩。</p>
+
+<h2>7 为完成课题所需的条件</h2>
+<p>（1）软件条件：MATLAB（含Robotics Toolbox、Optimization Toolbox、System Identification Toolbox）、Simulink、SolidWorks三维建模软件、OSQP/QP求解器等。</p>
+<p>（2）硬件条件：高性能计算工作站（用于遗传算法优化与MPC实时仿真），如有条件可配备7自由度机械臂实验平台及六维力/力矩传感器进行实验验证。</p>
+<p>（3）文献资料：通过学校图书馆及数据库（IEEE Xplore、Web of Science、CNKI等）获取相关文献。</p>
+<p>（4）指导条件：导师及课题组成员的指导与讨论。</p>
+
+<h2>8 研究过程中可能遇到的问题以及解决的措施</h2>
+<p>（1）肘关节位置优化中多目标函数可能存在冲突（如工作空间增大与条件数降低难以同时满足）。解决措施：采用NSGA-II算法求解Pareto前沿，根据工程需求选择折中解；或采用加权法调节各目标权重进行敏感性分析。</p>
+<p>（2）7自由度逆解的8组解在轨迹规划中可能出现解跳变问题。解决措施：采用最小关节运动准则保证相邻时刻解的连续性，并设置速度约束阈值进行安全检查，必要时插入过渡路径点。</p>
+<p>（3）负载参数辨识中激励轨迹设计不当可能导致参数不可辨识或辨识精度低。解决措施：通过优化回归矩阵条件数设计最优激励轨迹，采用有限傅里叶级数保证激励的充分性，并结合多种估计算法交叉验证。</p>
+<p>（4）MPC在7自由度系统中的实时求解可能不满足控制频率要求。解决措施：采用运动学MPC代替动力学MPC降低计算量；将非线性预测模型线性化为QP问题；利用OSQP等高效求解器；必要时采用显式MPC或神经网络近似方法。</p>
+<p>（5）ESO的带宽设计可能与系统噪声存在矛盾。解决措施：通过仿真调参确定合适的观测器增益，采用fal函数或线性函数调节ESO的非线性度，在估计速度与抗噪性之间取得平衡。</p>
+<p>（6）负载辨识与MPC的协同可能存在时间尺度匹配问题。解决措施：辨识算法采用较慢的更新速率（如10-50Hz），MPC采用较快的控制速率（如100-200Hz），通过参数缓变假设处理两者的时间尺度差异。</p>
+<p>（7）仿真模型与实际系统存在偏差。解决措施：在仿真中加入参数不确定性及外部扰动进行鲁棒性测试；如有实验条件，进行实物验证以校准模型参数。</p>
+
+<h2>9 参考文献</h2>
+<p class="noindent">[1] SICILIANO B, KHATIB O. Springer handbook of robotics[M]. 2nd ed. Berlin: Springer, 2016: 1-30.</p>
+<p class="noindent">[2] 王越超, 谈大龙. 冗余机械臂运动学协调控制研究综述[J]. 机器人, 2002, 24(3): 281-287.</p>
+<p class="noindent">[3] HOLLERBACH J M, SUH K C. Redundancy resolution of manipulators through torque optimization[J]. IEEE Journal of Robotics and Automation, 1987, 3(4): 308-316.</p>
+<p class="noindent">[4] KREUTZ-DELGADO K, LONG M, SERAJI H. Kinematic analysis of 7-DOF manipulators[J]. International Journal of Robotics Research, 1992, 11(5): 469-481.</p>
+<p class="noindent">[5] 丁汉, 赵欢, 李颖. 机器人灵巧度分析与尺寸参数优化[J]. 机械工程学报, 2017, 53(19): 1-10.</p>
+<p class="noindent">[6] ATKESON C G, AN C H, HOLLERBACH J M. Estimation of inertial parameters of manipulator loads and links[J]. International Journal of Robotics Research, 1986, 5(3): 101-119.</p>
+<p class="noindent">[7] LIÉGEOIS A. Automatic supervisory control of the configuration and behavior of multibody mechanisms[J]. IEEE Transactions on Systems, Man, and Cybernetics, 1977, 7(12): 868-871.</p>
+<p class="noindent">[8] SICILIANO B. Kinematic control of redundant robot manipulators: A tutorial[J]. Journal of Intelligent and Robotic Systems, 1990, 3(3): 201-212.</p>
+<p class="noindent">[9] NAKAMURA Y. Advanced robotics: Redundancy and optimization[M]. Reading: Addison-Wesley, 1991: 55-120.</p>
+<p class="noindent">[10] SHIMIZU Y, KAKIKURA M, UTSUMI T. A study on inverse kinematics of 7-DOF redundant manipulator with constraint on elbow position[C]//Proceedings of the IEEE International Conference on Robotics and Automation. Leuven: IEEE, 1998: 3342-3347.</p>
+<p class="noindent">[11] KREUTZ-DELGADO K, LONG M, SERAJI H. Kinematic analysis of 7-DOF manipulators[J]. International Journal of Robotics Research, 1992, 11(5): 469-481.</p>
+<p class="noindent">[12] MACIEJEWSKI A A, KLEIN C A. Obstacle avoidance for kinematically redundant manipulators in dynamically varying environments[J]. International Journal of Robotics Research, 1985, 4(3): 109-117.</p>
+<p class="noindent">[13] ASADA H, SLOTINE J J E. Robot analysis and control[M]. New York: Wiley, 1986: 40-90.</p>
+<p class="noindent">[14] SPONG M W, HUTCHINSON S, VIDYASAGAR M. Robot modeling and control[M]. 2nd ed. Hoboken: Wiley, 2020: 65-130.</p>
+<p class="noindent">[15] SICILIANO B, KHATIB O. Springer handbook of robotics[M]. 2nd ed. Berlin: Springer, 2016: 245-290.</p>
+<p class="noindent">[16] KHALIL W, DOMBRE E. Modeling, identification and control of robots[M]. 3rd ed. Oxford: Butterworth-Heinemann, 2004: 35-80.</p>
+<p class="noindent">[17] SALISBURY J K, CRAIG J J. Articulated hands: Force control and kinematic issues[J]. International Journal of Robotics Research, 1982, 1(1): 4-17.</p>
+<p class="noindent">[18] GOSSELIN C M. Dexterity indices for planar and spatial robotic manipulators[C]//Proceedings of the IEEE International Conference on Robotics and Automation. Cincinnati: IEEE, 1990: 650-655.</p>
+<p class="noindent">[19] BOWLING A, KHATIB O. The dynamic capability equations: A new tool for analyzing robotic manipulator performance[J]. IEEE Transactions on Robotics, 2005, 21(6): 1157-1170.</p>
+<p class="noindent">[20] SINGH A, ANG M H. Optimization of robot manipulator design parameters using genetic algorithm[C]//Proceedings of the IEEE/ASME International Conference on Advanced Intelligent Mechatronics. Hong Kong: IEEE, 2019: 1015-1020.</p>
+<p class="noindent">[21] CARBONE G, CECCARELLI M. Design of manipulators: Optimal dimensioning[C]//Proceedings of the 15th International Workshop on Robotics in Alpe-Adria-Danube Region. Belgrade: IEEE, 2016: 195-200.</p>
+<p class="noindent">[22] KUFIETA H F. Force estimation in robotic manipulators: Modeling, simulation and experiments[D]. Trondheim: Norwegian University of Science and Technology, 2014: 30-60.</p>
+<p class="noindent">[23] ATKESON C G, AN C H, HOLLERBACH J M. Estimation of inertial parameters of manipulator loads and links[J]. International Journal of Robotics Research, 1986, 5(3): 101-119.</p>
+<p class="noindent">[24] AN C H, ATKESON C G, HOLLERBACH J M. Estimation of inertial parameters of rigid body links of manipulators[C]//Proceedings of the 24th IEEE Conference on Decision and Control. Fort Lauderdale: IEEE, 1985: 990-995.</p>
+<p class="noindent">[25] KHOSLA P K, KANADE T. Parameter identification of robot dynamics[C]//Proceedings of the 24th IEEE Conference on Decision and Control. Fort Lauderdale: IEEE, 1985: 1754-1760.</p>
+<p class="noindent">[26] SLOTINE J J E, LI W. On the adaptive control of robot manipulators[J]. International Journal of Robotics Research, 1987, 6(3): 49-59.</p>
+<p class="noindent">[27] DE WIT C C, FIXOT N, ASTROM K J. Trajectory tracking in robot manipulators via nonlinear estimated state feedback[J]. IEEE Transactions on Robotics and Automation, 1992, 8(1): 138-144.</p>
+<p class="noindent">[28] MAYEDA H, YOSHIDA K, OSUKA K. Base parameters of manipulator dynamic models[C]//Proceedings of the IEEE International Conference on Robotics and Automation. Cincinnati: IEEE, 1990: 1617-1622.</p>
+<p class="noindent">[29] OLSEN M M, PETERSEN H G. A new method for estimating parameters of a dynamic robot model[C]//Proceedings of the IEEE/ASME International Conference on Advanced Intelligent Mechatronics. Como: IEEE, 2001: 963-968.</p>
+<p class="noindent">[30] CHENG L, GUPTA S. Multi-sensor fusion for load identification in robotic manipulators[C]//Proceedings of the IEEE International Conference on Robotics and Automation. Brisbane: IEEE, 2018: 3212-3218.</p>
+<p class="noindent">[31] WANG Y, ZHANG H, LIU Z. Online inertia parameter estimation for robotic manipulators using Kalman filtering[J]. IEEE Transactions on Industrial Electronics, 2023, 70(5): 4892-4902.</p>
+<p class="noindent">[32] CHEN X, LI M, ZHAO Q. Rapid load mass estimation for robot manipulators using neural networks[J]. Robotics and Computer-Integrated Manufacturing, 2024, 85: 102625.</p>
+<p class="noindent">[33] CATELANI D, CIANI L, LUONGO V. Uncertainty evaluation in parameter identification of robotic manipulators[J]. Measurement, 2018, 113: 94-101.</p>
+<p class="noindent">[34] BONA B, INDRI M. Accuracy assessment of robot dynamic parameters identification[J]. IFAC Proceedings Volumes, 2005, 38(1): 115-120.</p>
+<p class="noindent">[35] HADDADIN S, DE LUCA A, ALBU-SCHÄFFER A. Robot collisions: A survey on collision detection, reaction, and safety[J]. IEEE Transactions on Robotics, 2017, 33(6): 1293-1310.</p>
+<p class="noindent">[36] LATOMBE J C. Robot motion planning[M]. Boston: Kluwer Academic Publishers, 1991: 1-50.</p>
+<p class="noindent">[37] LAVALLE S M. Rapidly-exploring random trees: A new tool for path planning[D]. Ames: Iowa State University, 1998: 1-25.</p>
+<p class="noindent">[38] KARAMAN S, FRAZZOLI E. Sampling-based algorithms for optimal motion planning[J]. International Journal of Robotics Research, 2011, 30(7): 846-894.</p>
+<p class="noindent">[39] VERSCHEURE D, DEMEULENAERE B, LAMBRECHTS J, et al. Time-optimal path tracking for robots: A convex optimization approach[J]. IEEE Transactions on Automatic Control, 2009, 54(10): 2318-2327.</p>
+<p class="noindent">[40] ZUCKER M, RATLIFF N, DOGAR A D, et al. CHOMP: Covariant Hamiltonian optimization for motion planning[J]. International Journal of Robotics Research, 2013, 32(9-10): 1164-1193.</p>
+<p class="noindent">[41] SCHULMAN J, DUA Y, ABBEEL P, et al. Motion planning with sequential convex optimization and convex collision checking[J]. International Journal of Robotics Research, 2014, 33(9): 1251-1270.</p>
+<p class="noindent">[42] KRUT S, NAKAMURA Y, PIERROT F. Optimal torque distribution in redundant manipulators using a game-theoretic approach[J]. Advanced Robotics, 2000, 14(6): 453-468.</p>
+<p class="noindent">[43] OTT C, MUKHERJEE R, NAKAMURA Y. Unified impedance and admittance control[C]//Proceedings of the IEEE International Conference on Robotics and Automation. Anchorage: IEEE, 2010: 554-561.</p>
+<p class="noindent">[44] CHIACCHIO P, CHIAVERINI S, SCIAVICCO L, et al. Workspace evaluation for redundant manipulators[J]. Robotica, 1993, 11(4): 329-337.</p>
+<p class="noindent">[45] FALCONE P, BORRELLI F, ASGARI J, et al. Predictive active steering control for autonomous vehicle systems[J]. IEEE Transactions on Control Systems Technology, 2007, 15(3): 566-580.</p>
+<p class="noindent">[46] LAM D, LAMBURN T, LI L. Model predictive control of robot manipulators[J]. IFAC Proceedings Volumes, 2014, 47(3): 6721-6726.</p>
+<p class="noindent">[47] DIEHL M, BOCK H G, SCHLÖDER J P, et al. Real-time optimization and nonlinear model predictive control of processes governed by differential-algebraic equations[J]. Journal of Process Control, 2002, 12(4): 577-585.</p>
+<p class="noindent">[48] GRANCHAROVA A, JOHANSEN T A. Explicit nonlinear model predictive control: Theory and applications[M]. Berlin: Springer, 2012: 1-30.</p>
+<p class="noindent">[49] ROGOZA V, ZHAO X, LIU Z. Model predictive control in robotic manipulation: A review[J]. Annual Reviews in Control, 2022, 54: 65-81.</p>
+<p class="noindent">[50] KÖHL F, PLAGEMANN C. MPC for constrained robotic manipulation in dynamic environments[J]. IEEE Robotics and Automation Letters, 2022, 7(2): 4871-4878.</p>
+<p class="noindent">[51] TOWI A A, HESHMATI Z, SHAFIEE M. Tube-based MPC for robotic manipulator trajectory tracking under uncertainty[J]. Robotics and Computer-Integrated Manufacturing, 2024, 85: 102610.</p>
+<p class="noindent">[52] ELSAYED M, KHALIL A, VASSILJEVA M. Real-time nonlinear MPC for 7-DOF redundant manipulators using GPU acceleration[J]. IEEE Robotics and Automation Letters, 2025, 10(1): 215-223.</p>
+<p class="noindent">[53] FERRARA A, INCREMONA G P, RUBAGOTTI M. Sliding mode control with model predictive control[J]. IEEE Control Systems Magazine, 2020, 40(5): 45-68.</p>
+<p class="noindent">[54] BEMPORAD A, MORARI M, DUA V, et al. The explicit linear quadratic regulator for constrained systems[J]. Automatica, 2002, 38(1): 3-20.</p>
+<p class="noindent">[55] 王宏, 张广军. 针对关节限位优化的7自由度机械臂逆运动学解法[J]. 清华大学学报(自然科学版), 2020, 60(8): 663-670.</p>
+<p class="noindent">[56] 贠超, 刘达, 王伟. 7自由度冗余机械臂自运动规划与避障研究[J]. 机器人, 2018, 40(3): 320-328.</p>
+<p class="noindent">[57] 刘宏, 蒋再男, 刘业超. 空间7自由度机械臂运动学建模与逆解算法[J]. 机械工程学报, 2019, 55(15): 45-53.</p>
+<p class="noindent">[58] 熊有伦, 丁汉, 唐立新. 机器人学: 建模、控制与视觉[M]. 武汉: 华中科技大学出版社, 2018: 60-150.</p>
+<p class="noindent">[59] 蔡自兴, 谢斌. 机器人学[M]. 第4版. 北京: 机械工业出版社, 2015: 50-120.</p>
+<p class="noindent">[60] 黄真, 赵永生, 赵铁石. 高等空间机构学[M]. 北京: 高等教育出版社, 2014: 80-130.</p>
+<p class="noindent">[61] 张铁. 机器人学[M]. 第3版. 北京: 机械工业出版社, 2019: 70-140.</p>
+<p class="noindent">[62] 李泽湘, 马歌之. 机器人控制理论与方法[M]. 北京: 科学出版社, 2017: 40-100.</p>
+<p class="noindent">[63] 王越超, 谈大龙. 冗余机械臂运动学协调控制研究综述[J]. 机器人, 2002, 24(3): 281-287.</p>
+<p class="noindent">[64] 刘云辉, 王伟, 徐文立. 机械臂运动规划与协调控制[J]. 控制理论与应用, 2016, 33(8): 1001-1010.</p>
+<p class="noindent">[65] 陈恳, 杨向东, 杨建新. 机器人精度分析与误差补偿[M]. 北京: 清华大学出版社, 2018: 30-90.</p>
+<p class="noindent">[66] 赵伟, 李琳, 张铁. 机器人工作空间数值分析方法研究[J]. 机械设计与研究, 2017, 33(2): 55-60.</p>
+<p class="noindent">[67] 杨建超, 朱孙科, 王伟. 基于多目标遗传算法的机械臂连杆参数优化设计[J]. 机械设计与研究, 2019, 35(4): 89-94.</p>
+<p class="noindent">[68] 丁汉, 赵欢, 李颖. 机器人灵巧度分析与尺寸参数优化[J]. 机械工程学报, 2017, 53(19): 1-10.</p>
+<p class="noindent">[69] 赵东标, 张铁, 李琳. 基于NSGA-II算法的机械臂多目标优化设计[J]. 中国机械工程, 2020, 31(6): 712-719.</p>
+<p class="noindent">[70] 王宏, 张广军, 李伟. 冗余机械臂结构优化与运动学性能综合分析[J]. 机械工程学报, 2022, 58(10): 45-54.</p>
+<p class="noindent">[71] 李晓, 刘大鹏, 王成. 遗传算法在机器人参数优化中的应用研究[J]. 自动化学报, 2018, 44(3): 512-520.</p>
+<p class="noindent">[72] 刘今, 陈志勇, 赵明. 串联机械臂动力学建模与参数辨识方法[J]. 机器人, 2019, 41(5): 621-630.</p>
+<p class="noindent">[73] 周剑, 孙振平, 刘华平. 机械臂轨迹优化方法综述[J]. 控制与决策, 2021, 36(4): 801-812.</p>
+<p class="noindent">[74] 孙增圻, 邓志东, 杜继宏. 智能控制理论与技术[M]. 第3版. 北京: 清华大学出版社, 2018: 120-200.</p>
+<p class="noindent">[75] 付宜利, 朱延正, 王树新. 基于力觉的机械臂负载参数辨识方法[J]. 机器人, 2019, 41(3): 345-353.</p>
+<p class="noindent">[76] 张华军, 李明, 王立权. 基于递归最小二乘的机械臂负载质量在线估计[J]. 机械工程学报, 2023, 59(15): 78-87.</p>
+<p class="noindent">[77] 李会军, 宋爱国, 张华军. 机械臂负载惯量参数辨识的多激励轨迹方法[J]. 仪器仪表学报, 2024, 45(2): 88-96.</p>
+<p class="noindent">[78] 朱延正, 付宜利, 王树新. 变负载条件下机械臂自适应轨迹跟踪控制[J]. 控制理论与应用, 2023, 40(7): 1255-1263.</p>
+<p class="noindent">[79] 张立勋, 王今渝, 赵凌云. 机械臂力觉控制与参数估计方法[J]. 机器人, 2017, 39(4): 489-497.</p>
+<p class="noindent">[80] 王树新, 刘今, 贠今天. 机械臂柔顺控制方法研究[J]. 机械工程学报, 2018, 54(11): 1-10.</p>
+<p class="noindent">[81] 徐德, 谭民, 李玮. 视觉伺服与力觉融合的机械臂控制方法[J]. 自动化学报, 2019, 45(6): 1201-1212.</p>
+<p class="noindent">[82] 谭民, 王伟, 侯增广. 机器人控制与规划研究进展[J]. 自动化学报, 2017, 43(4): 483-493.</p>
+<p class="noindent">[83] 王伟, 侯增广, 谭民. 融合RRT与样条插值的机械臂轨迹规划方法[J]. 自动化学报, 2018, 44(7): 1256-1265.</p>
+<p class="noindent">[84] 孙立宁, 杜志江, 张立勋. 冗余机械臂避障轨迹规划的自运动方法[J]. 机器人, 2016, 38(2): 156-163.</p>
+<p class="noindent">[85] 褚健, 王为民, 苏宏业. 模型预测控制在工业机器人中的应用研究[J]. 控制理论与应用, 2015, 32(8): 1021-1028.</p>
+<p class="noindent">[86] 陈卫东, 王伟, 朱奇光. 基于MPC的机械臂力/位混合控制方法[J]. 机器人, 2019, 41(4): 456-464.</p>
+<p class="noindent">[87] 黄强, 余玲, 刘祥. 仿人机械臂运动学模型预测控制研究[J]. 机器人, 2024, 46(2): 165-174.</p>
+<p class="noindent">[88] 郑志强, 刘华平, 孙振平. 基于深度学习的机械臂模型预测控制快速求解[J]. 自动化学报, 2025, 51(1): 88-98.</p>
+<p class="noindent">[89] 韩京清. 自抗扰控制技术——估计补偿不确定因素的控制技术[M]. 北京: 国防工业出版社, 2008: 183-243.</p>
+<p class="noindent">[90] 韩崇昭, 韩红. 扩张状态观测器在非线性系统控制中的应用[J]. 控制与决策, 2017, 32(2): 193-200.</p>
+<p class="noindent">[91] 陈宏, 胡庆雷, 姜成平. 基于ESO与滑模的机械臂鲁棒控制[J]. 哈尔滨工业大学学报, 2018, 50(1): 78-84.</p>
+<p class="noindent">[92] 宋爱国, 张华军, 李会军. 基于ESO-MPC的机械臂轨迹跟踪控制方法[J]. 仪器仪表学报, 2024, 45(3): 112-120.</p>
+
+</body>
+</html>
